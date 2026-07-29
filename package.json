@@ -1,0 +1,20 @@
+{
+  "name": "mutual-funds-analytics",
+  "version": "1.0.0",
+  "description": "Production-grade Mutual Funds Analytics pipeline featuring ETL, live NAV ingestion, data validation, exploratory analysis, SQL, and interactive dashboards.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kritvi0208/Mutual-Funds-Analytics.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kritvi0208/Mutual-Funds-Analytics/issues"
+  },
+  "homepage": "https://github.com/Kritvi0208/Mutual-Funds-Analytics#readme"
+}

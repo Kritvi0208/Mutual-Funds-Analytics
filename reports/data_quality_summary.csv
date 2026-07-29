@@ -1,0 +1,11 @@
+Dataset,Rows,Columns,Null Values,Null Pct,Duplicates,Quality Status
+01_fund_master.csv,40,15,0,0.00%,0,CLEAN
+02_nav_history.csv,46000,3,0,0.00%,0,CLEAN
+03_aum_by_fund_house.csv,90,5,0,0.00%,0,CLEAN
+04_monthly_sip_inflows.csv,48,6,12,4.17%,0,NEEDS ATTENTION
+05_category_inflows.csv,144,3,0,0.00%,0,CLEAN
+06_industry_folio_count.csv,21,6,0,0.00%,0,CLEAN
+07_scheme_performance.csv,40,19,0,0.00%,0,CLEAN
+08_investor_transactions.csv,32778,13,0,0.00%,0,CLEAN
+09_portfolio_holdings.csv,322,8,0,0.00%,0,CLEAN
+10_benchmark_indices.csv,8050,3,0,0.00%,0,CLEAN
