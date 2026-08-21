@@ -2,15 +2,14 @@
 run_pipeline.py - Master Pipeline Execution Script for Mutual Funds Analytics
 
 Runs the complete end-to-end data pipeline sequentially:
-1. Data Ingestion & Schema Validation (data_ingestion.py)
-2. Live NAV API Ingestion (live_nav_fetch.py)
-3. Data Cleaning & Normalization (data_cleaner.py)
-4. SQLite Star Schema Database Loader (data_loader.py)
-5. Exploratory Data Analysis & Visualizations (generate_eda.py)
-6. Performance & Risk Analytics Engine (generate_performance.py)
-7. Advanced Risk Modeling & Recommender (generate_advanced.py)
-8. Presentation Deck Generator (generate_presentation.py)
-9. Final PDF Report Generator (generate_final_pdf.py)
+1. Live NAV API Ingestion (scripts/live_nav_fetch.py)
+2. Master ETL Pipeline & Schema Validation (scripts/etl_pipeline.py)
+3. Performance & Risk Analytics Engine (scripts/compute_metrics.py)
+4. Exploratory Data Analysis & Visualizations (scripts/generate_eda.py)
+5. Advanced Risk Analytics & Recommender (scripts/generate_advanced.py)
+6. Power BI Dashboard & Visual Exporter (scripts/generate_powerbi_dashboard.py)
+7. PowerPoint Presentation Generator (scripts/generate_presentation.py)
+8. Final Capstone PDF Report Generator (scripts/generate_final_pdf.py)
 
 Usage:
     python run_pipeline.py
@@ -26,6 +25,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_DIR = Path(__file__).resolve().parent
+SCRIPTS_DIR = BASE_DIR / "scripts"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,16 +35,14 @@ logging.basicConfig(
 logger = logging.getLogger("MasterPipeline")
 
 PIPELINE_STEPS = [
-    ("1/10: Data Ingestion & Schema Validation", "data_ingestion.py"),
-    ("2/10: Live NAV API Ingestion", "live_nav_fetch.py"),
-    ("3/10: Data Cleaning & Normalization", "data_cleaner.py"),
-    ("4/10: SQLite Star Schema Database Loader", "data_loader.py"),
-    ("5/10: Exploratory Data Analysis & Figures", "generate_eda.py"),
-    ("6/10: Performance & Risk Analytics Engine", "generate_performance.py"),
-    ("7/10: Advanced Risk Analytics & Recommender", "generate_advanced.py"),
-    ("8/10: Power BI Dashboard & Page Exporter", "generate_powerbi_dashboard.py"),
-    ("9/10: PowerPoint Presentation Generator", "generate_presentation.py"),
-    ("10/10: Final PDF Capstone Report Generator", "generate_final_pdf.py")
+    ("1/8: Live NAV API Ingestion", "live_nav_fetch.py"),
+    ("2/8: Master ETL Pipeline & Database Loader", "etl_pipeline.py"),
+    ("3/8: Performance & Risk Analytics Engine", "compute_metrics.py"),
+    ("4/8: Exploratory Data Analysis & Figures", "generate_eda.py"),
+    ("5/8: Advanced Risk Analytics & Recommender", "generate_advanced.py"),
+    ("6/8: Power BI Dashboard & Page Exporter", "generate_powerbi_dashboard.py"),
+    ("7/8: PowerPoint Presentation Generator", "generate_presentation.py"),
+    ("8/8: Final PDF Capstone Report Generator", "generate_final_pdf.py")
 ]
 
 
@@ -55,12 +53,12 @@ def run_pipeline():
     logger.info("=================================================================")
 
     for step_num, script_name in PIPELINE_STEPS:
-        script_path = BASE_DIR / script_name
+        script_path = SCRIPTS_DIR / script_name
         if not script_path.exists():
             logger.error(f"Script {script_name} missing at {script_path}. Skipping.")
             continue
 
-        logger.info(f"Executing Step [{step_num}] -> {script_name}...")
+        logger.info(f"Executing Step [{step_num}] -> scripts/{script_name}...")
         res = subprocess.run([sys.executable, str(script_path)], cwd=str(BASE_DIR))
 
         if res.returncode != 0:

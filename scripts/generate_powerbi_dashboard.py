@@ -32,7 +32,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
 TABLES_DIR = BASE_DIR / "reports" / "tables"
 FIGURES_DIR = BASE_DIR / "reports" / "figures"
@@ -173,7 +173,9 @@ def render_page2(data):
     # Chart 1: Risk vs Return Scatter Plot
     ax_scatter = fig.add_subplot(gs[0, 0])
     perf = data["performance"]
-    sns.scatterplot(data=perf, x="std_dev_ann_pct", y="return_3yr_pct", hue="risk_grade", size="aum_crore", sizes=(40, 300), palette="Set1", ax=ax_scatter)
+    y_col = "cagr_3yr_pct" if "cagr_3yr_pct" in perf.columns else "return_3yr_pct"
+    hue_col = "risk_grade" if "risk_grade" in perf.columns else ("risk_category" if "risk_category" in perf.columns else "category")
+    sns.scatterplot(data=perf, x="std_dev_ann_pct", y=y_col, hue=hue_col, size="aum_crore", sizes=(40, 300), palette="Set1", ax=ax_scatter)
     ax_scatter.set_title("Risk vs Return Profile (3-Yr CAGR vs Volatility, Size = AUM)", fontsize=11, fontweight="bold", color=NAVY)
     ax_scatter.set_xlabel("Annualized Volatility (%)", fontsize=9)
     ax_scatter.set_ylabel("3-Year CAGR Return (%)", fontsize=9)

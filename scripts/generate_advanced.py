@@ -25,7 +25,7 @@ import seaborn as sns
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 PROC_DIR = BASE_DIR / "data" / "processed"
 TABLES_DIR = BASE_DIR / "reports" / "tables"
 FIGURES_DIR = BASE_DIR / "reports" / "figures"

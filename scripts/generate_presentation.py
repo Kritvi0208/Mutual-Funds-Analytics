@@ -18,7 +18,7 @@ from pptx.enum.shapes import MSO_SHAPE
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 REPORTS_DIR = BASE_DIR / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)

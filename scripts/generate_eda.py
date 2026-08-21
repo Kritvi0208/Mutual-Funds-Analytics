@@ -28,7 +28,7 @@ plt.rcParams["axes.titlesize"] = 12
 plt.rcParams["axes.labelsize"] = 11
 plt.rcParams["figure.titlesize"] = 14
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
 FIGURES_DIR = BASE_DIR / "reports" / "figures"
 NOTEBOOKS_DIR = BASE_DIR / "notebooks"
@@ -265,8 +265,10 @@ def generate_all_charts(data):
 
     # 13. Risk vs Return Scatter Plot
     perf_df = data["performance"].copy()
+    y_col = "cagr_3yr_pct" if "cagr_3yr_pct" in perf_df.columns else "return_3yr_pct"
+    hue_col = "risk_grade" if "risk_grade" in perf_df.columns else ("risk_category" if "risk_category" in perf_df.columns else "category")
     fig, ax = plt.subplots(figsize=(10, 6), dpi=300)
-    sns.scatterplot(data=perf_df, x="std_dev_ann_pct", y="return_3yr_pct", hue="risk_grade", size="aum_crore",
+    sns.scatterplot(data=perf_df, x="std_dev_ann_pct", y=y_col, hue=hue_col, size="aum_crore",
                     sizes=(40, 400), palette="Set1", alpha=0.8, ax=ax)
     ax.set_title("Risk vs Return Profile: 3-Yr Return CAGR vs Annualized Volatility", fontsize=13, fontweight="bold", pad=12)
     ax.set_xlabel("Annualized Volatility / Standard Deviation (%)", fontsize=11)
@@ -534,11 +536,11 @@ plt.show()
     nb.cells.append(nbf.v4.new_code_cell(code_sector_plot))
 
     # Save notebook
-    out_notebook_path = NOTEBOOKS_DIR / "EDA_Analysis.ipynb"
+    out_notebook_path = NOTEBOOKS_DIR / "03_eda_analysis.ipynb"
     with open(out_notebook_path, "w", encoding="utf-8") as f:
         nbf.write(nb, f)
 
-    logger.info(f"notebooks/EDA_Analysis.ipynb created successfully at {out_notebook_path}.")
+    logger.info(f"notebooks/03_eda_analysis.ipynb created successfully at {out_notebook_path}.")
 
 
 def main():
