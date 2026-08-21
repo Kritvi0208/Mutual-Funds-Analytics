@@ -65,7 +65,7 @@ def populate_dim_date(engine):
         "is_weekend": date_range.dayofweek.isin([5, 6]).astype(int)
     })
 
-    dim_date.to_sql("dim_date", con=engine, if_exists="append", index=False)
+    dim_date.to_sql("dim_date", con=engine, if_exists="replace", index=False)
     logger.info(f"dim_date populated with {len(dim_date)} calendar dates.")
 
 
@@ -96,7 +96,7 @@ def load_datasets_to_sqlite(engine) -> dict:
         csv_rows = len(df)
 
         # Load into SQLite
-        df.to_sql(table_name, con=engine, if_exists="append", index=False)
+        df.to_sql(table_name, con=engine, if_exists="replace", index=False)
 
         # Verify DB row count parity
         with sqlite3.connect(DB_PATH) as conn:

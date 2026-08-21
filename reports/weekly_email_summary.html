@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f8fafc; color: #0f172a; padding: 20px; }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; max-width: 650px; margin: 0 auto; }
+        .header { background: #1e3a8a; color: #ffffff; padding: 18px; border-radius: 6px; text-align: center; }
+        .metric { font-size: 22px; font-weight: bold; color: #10b981; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .table th, .table td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; font-size: 13px; }
+        .table th { background: #1e3a8a; color: white; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h2>Bluestock Mutual Fund Weekly Performance Brief</h2>
+        </div>
+        <p>Hello Team,</p>
+        <p>Here is your automated weekly performance and risk analytics brief for Indian Mutual Funds:</p>
+        <ul>
+            <li>Monthly Industry SIP Inflow Peak: <span class="metric">₹31,002 Cr</span> (Dec 2025 ATH)</li>
+            <li>Total Active Industry Folios: <b>26.12 Crores</b></li>
+            <li>Top Ranked Scheme: <b>SBI Small Cap Fund (Score 100.0/100, 3Yr CAGR 23.39%)</b></li>
+            <li>Historical 95% Daily VaR: <b>-1.82%</b> | CVaR: <b>-2.45%</b></li>
+        </ul>
+        <h3>Top 3 Ranked Mutual Funds (Scorecard)</h3>
+        <table class="table">
+            <tr><th>Rank</th><th>Scheme Name</th><th>3Yr CAGR</th><th>Sharpe</th><th>Score</th></tr>
+            <tr><td>1</td><td>SBI Small Cap Fund</td><td>23.39%</td><td>0.94</td><td>100.0</td></tr>
+            <tr><td>2</td><td>ICICI Prudential Bluechip Fund</td><td>24.12%</td><td>1.35</td><td>98.5</td></tr>
+            <tr><td>3</td><td>HDFC Top 100 Fund</td><td>21.80%</td><td>1.28</td><td>95.2</td></tr>
+        </table>
+        <p style="margin-top:25px; font-size:11px; color:#64748b; text-align:center;">
+            Generated automatically by Bluestock Mutual Fund Analytics Engine.<br>
+            To configure live SMTP dispatch, set SMTP_SERVER, SENDER_EMAIL, and SENDER_PASSWORD environment variables.
+        </p>
+    </div>
+</body>
+</html>

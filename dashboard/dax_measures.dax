@@ -1,0 +1,41 @@
+-- ====================================================================
+-- Bluestock Mutual Fund Analytics - Power BI DAX Measures Definition
+-- ====================================================================
+
+-- Page 1: Industry Overview DAX Measures
+Total AUM (Cr) = SUM(fact_aum[aum_crore])
+
+Monthly SIP Inflow (Cr) = MAX(fact_sip_inflows[sip_inflow_crore])
+
+Total Folios (Cr) = MAX(fact_industry_folios[total_folios_crore])
+
+Total Schemes = DISTINCTCOUNT(dim_fund[amfi_code])
+
+-- Page 2: Fund Performance DAX Measures
+Average 3Yr CAGR (%) = AVERAGE(fact_performance[cagr_3yr_pct])
+
+Average Sharpe Ratio = AVERAGE(fact_performance[sharpe_ratio])
+
+Average Alpha (%) = AVERAGE(fact_performance[alpha_pct])
+
+Average Beta = AVERAGE(fact_performance[beta])
+
+Average Expense Ratio (%) = AVERAGE(dim_fund[expense_ratio_pct])
+
+-- Page 3: Investor Analytics DAX Measures
+Total Investor Capital (Cr) = SUM(fact_transactions[amount_inr]) / 10000000.0
+
+Average SIP Amount (INR) = CALCULATE(AVERAGE(fact_transactions[amount_inr]), fact_transactions[transaction_type] = "SIP")
+
+Total Transaction Volume = COUNT(fact_transactions[investor_id])
+
+-- Page 4: SIP & Market Trends DAX Measures
+FY25 Net Inflow (Cr) = 
+CALCULATE(
+    SUM(fact_category_inflows[net_inflow_crore]),
+    FILTER(
+        fact_category_inflows,
+        fact_category_inflows[month] >= DATE(2024, 4, 1) && 
+        fact_category_inflows[month] <= DATE(2025, 3, 31)
+    )
+)
