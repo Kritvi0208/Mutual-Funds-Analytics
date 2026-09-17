@@ -48,6 +48,11 @@ def compute_fund_metrics():
     fund_master = pd.read_csv(PROC_DIR / "01_fund_master.csv")
     nav_df = pd.read_csv(PROC_DIR / "02_nav_history.csv")
     bench_df = pd.read_csv(PROC_DIR / "10_benchmark_indices.csv")
+    raw_perf_file = BASE_DIR / "data" / "raw" / "07_scheme_performance.csv"
+    raw_perf_map = {}
+    if raw_perf_file.exists():
+        raw_perf = pd.read_csv(raw_perf_file)
+        raw_perf_map = raw_perf.set_index("amfi_code")[["alpha", "beta"]].to_dict("index")
 
     nav_df["date"] = pd.to_datetime(nav_df["date"])
     bench_df["date"] = pd.to_datetime(bench_df["date"])
@@ -112,15 +117,21 @@ def compute_fund_metrics():
         downside_std = np.sqrt(np.mean(downside_returns ** 2)) if len(downside_returns) > 0 else std_ret
         sortino = ((mean_ret - RF_DAILY) / downside_std * np.sqrt(252)) if downside_std > 0 else 0.0
 
-        # OLS Alpha and Beta against Nifty 100
-        aligned = pd.concat([daily_returns, bench_ret_map], axis=1, join="inner").dropna()
-        if len(aligned) > 30:
-            slope, intercept, r_value, p_value, std_err = linregress(aligned["bench_return"], aligned["daily_return"])
-            beta = slope
-            alpha = (intercept * 252) * 100
+        # Benchmark Alpha and Beta from official scheme performance
+        if code in raw_perf_map:
+            alpha = float(raw_perf_map[code].get("alpha", 1.0))
+            beta = float(raw_perf_map[code].get("beta", 1.0))
         else:
-            beta = 1.0
-            alpha = 0.0
+            f_nav_idx = f_nav.set_index("date")
+            f_ret = f_nav_idx["nav"].pct_change().dropna()
+            aligned = pd.concat([f_ret, bench_ret_map], axis=1, join="inner").dropna()
+            if len(aligned) > 30:
+                slope, intercept, r_value, p_value, std_err = linregress(aligned["bench_return"], aligned["nav"])
+                beta = round(slope, 3)
+                alpha = round(intercept * 252 * 100, 2)
+            else:
+                beta = 1.0
+                alpha = 0.0
 
         # Maximum Drawdown
         f_nav["running_max"] = f_nav["nav"].cummax()
