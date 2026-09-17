@@ -124,9 +124,10 @@ def compute_fund_metrics():
         else:
             f_nav_idx = f_nav.set_index("date")
             f_ret = f_nav_idx["nav"].pct_change().dropna()
+            f_ret.name = "fund_return"
             aligned = pd.concat([f_ret, bench_ret_map], axis=1, join="inner").dropna()
             if len(aligned) > 30:
-                slope, intercept, r_value, p_value, std_err = linregress(aligned["bench_return"], aligned["nav"])
+                slope, intercept, r_value, p_value, std_err = linregress(aligned["bench_return"], aligned["fund_return"])
                 beta = round(slope, 3)
                 alpha = round(intercept * 252 * 100, 2)
             else:
