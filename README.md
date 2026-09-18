@@ -1,26 +1,106 @@
-# Bluestock Mutual Fund Analytics — Institutional Portfolio & Risk Analytics Platform
+# 📈 Bluestock Mutual Fund Analytics — Institutional Portfolio & Risk Intelligence Platform
 
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Database-SQLite3](https://img.shields.io/badge/Database-SQLite3-green.svg)](https://www.sqlite.org/)
-[![Streamlit Dashboard](https://img.shields.io/badge/Dashboard-Streamlit-red.svg)](https://streamlit.io/)
-[![Power BI](https://img.shields.io/badge/Dashboard-Power%20BI-yellow.svg)](https://powerbi.microsoft.com/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![Database SQLite3](https://img.shields.io/badge/Database-SQLite3-003B57.svg?style=flat&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Dashboard Streamlit](https://img.shields.io/badge/Web_App-Streamlit-FF4B4B.svg?style=flat&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Power BI](https://img.shields.io/badge/BI_Platform-Power_BI-F2C811.svg?style=flat&logo=powerbi&logoColor=black)](https://powerbi.microsoft.com/)
+[![License MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-An institutional-grade empirical mutual fund analytics and data engineering platform covering **64,320 daily NAV observations**, **32,778 investor transaction logs**, and **10 relational mutual fund master datasets**.
+An institutional-grade empirical mutual fund analytics, quantitative risk modeling, and data engineering platform covering **64,320 cleaned daily NAV observations**, **32,778 investor transaction logs**, and **10 relational mutual fund master datasets**.
 
 ---
 
-## 📑 Project Overview & Architecture
+## 🌟 Executive Summary & Key Highlights
 
-This repository delivers an end-to-end financial analytics ecosystem for Indian Mutual Funds:
-- **ETL Data Pipeline**: Automated ingestion, schema validation, transaction normalization, and weekend/holiday NAV forward-filling (`scripts/etl_pipeline.py`).
-- **Star Schema Database**: Relational SQLite database with primary keys, foreign keys, and indexes (**105,745 records** across 10 tables with 100% row parity).
-- **Quantitative Risk Modeling**: 1Yr/3Yr CAGR, Sharpe Ratio ($R_f=6.5\%$), Sortino Ratio, OLS Alpha/Beta regression against Nifty 100 benchmark, Maximum Drawdown, and 95% Historical VaR/CVaR.
-- **Composite 0–100 Fund Scorecard**: 5-factor weighted rating model evaluating return, risk, alpha, expense ratio, and downside resilience.
-- **Investor Cohort & Continuity Analysis**: Retention modeling across 2024/2025 cohorts and SIP continuity gap analysis (identifying at-risk investors with gaps >35 days).
-- **Interactive Dashboards**: 
-  - **Streamlit Web Application (`dashboard/app.py`)**: 5 interactive views in Light Pastel UI (Executive Overview, Scorecard Explorer, Risk-Return Analytics, SIP Calculator, and Recommender).
-  - **Power BI Dashboard (`dashboard/bluestock_mf_dashboard.pbix`)**: 4-page interactive visual analytics dashboard with DAX measures.
-- **Automated Reporting**: 15-page comprehensive capstone PDF report, 12-slide executive presentation deck, and automated weekly HTML email briefs.
+- **Data Engineering**: Automated pipeline ingesting 10 market datasets and live AMFI REST APIs (`mfapi.in`) with automated weekend forward-filling (`ffill()`) and schema validation.
+- **Relational Star Schema Database**: Production-ready SQLite database (`bluestock_mf.db`) with **105,745 records** across 10 normalized tables with 100% row-count parity.
+- **Quantitative Risk Modeling**: Evaluated 40 mutual fund schemes using **1Yr/3Yr CAGR**, **Sharpe Ratio** ($R_f=6.5\%$), **Sortino Ratio**, **OLS Alpha/Beta regressions** against Nifty 100, and **95% Historical Daily VaR & CVaR**.
+- **Investor Behavior & Continuity**: Discovered a **97.8% gap attrition rate** among repeat SIP investors through cohort retention modeling.
+- **Interactive Decision Tools**: 5-view **Streamlit Web Application** featuring an interactive SIP future wealth compounder and a rule-based **Smart Fund Recommender Engine**.
+
+---
+
+## 🖥️ Interactive Dashboard Showcase
+
+The platform features an interactive **Power BI** analytical suite and a responsive **Streamlit** web application with a Light Pastel interface.
+
+### 📊 Page 1: Industry Overview & Market Growth
+> Macroeconomic health, industry AUM trajectory, monthly SIP inflows, and category-wise folio expansion.
+![Industry Overview](reports/figures/page1_industry_overview.png)
+
+---
+
+### 🏆 Page 2: Fund Performance & Quantitative Scorecard
+> Risk vs. return scatter analysis, 0–100 composite scorecard rankings, and peer benchmark comparisons.
+![Fund Performance](reports/figures/page2_fund_performance.png)
+
+---
+
+### 👥 Page 3: Investor Analytics & Demographic Profiling
+> Geographic penetration across city tiers, age-group SIP distributions, and payment mode adoption.
+![Investor Analytics](reports/figures/page3_investor_analytics.png)
+
+---
+
+### 📈 Page 4: SIP Inflow Dynamics & Market Trends
+> Longitudinal SIP compounding trends, net inflow trajectories, and category allocation shifts.
+![SIP & Market Trends](reports/figures/page4_sip_market_trends.png)
+
+---
+
+## 🔬 Quantitative Performance & Risk Analytics
+
+### 1. Top 5 Schemes vs. Benchmark (3-Year Cumulative Returns)
+A comparative historical growth trajectory evaluating market-leading equity schemes against the Nifty 100 benchmark.
+![Top 5 Funds vs Benchmark](reports/figures/01_top5_vs_benchmarks_3yr.png)
+
+### 2. Risk vs. Return Matrix (Sharpe vs. Annualized Volatility)
+Isolating true risk-adjusted performance from pure volatility.
+![Risk vs Return Scatter](reports/figures/13_risk_return_scatter.png)
+
+### 3. Pairwise NAV Correlation Matrix
+Cross-asset diversification analysis across top equity and debt holdings.
+![Correlation Heatmap](reports/figures/11_nav_return_correlation_heatmap.png)
+
+---
+
+## 📐 Quantitative Methodology & Formulas
+
+| Metric | Formula | Purpose / Business Significance |
+|---|---|---|
+| **CAGR (3-Year)** | $\left(\frac{\text{NAV}_{\text{end}}}{\text{NAV}_{\text{start}}}\right)^{\frac{1}{3}} - 1$ | Annualized compounded growth rate (5-Yr is strictly NaN per 4.4-yr dataset span). |
+| **Sharpe Ratio** | $\frac{R_p - R_f}{\sigma_p} \times \sqrt{252}$ | Return earned in excess of the risk-free rate ($R_f=6.5\%$) per unit of total risk. |
+| **Sortino Ratio** | $\frac{R_p - R_f}{\sigma_d} \times \sqrt{252}$ | Evaluates excess return penalized solely by downside/loss volatility ($\sigma_d$). |
+| **Jensen's Alpha ($\alpha$)** | $R_p - [R_f + \beta (R_m - R_f)]$ | Manager stock-picking skill in excess of benchmark systematic movements. |
+| **Beta ($\beta$)** | $\frac{\text{Cov}(R_p, R_m)}{\text{Var}(R_m)}$ | Systematic sensitivity of fund NAV relative to Nifty 100 movements. |
+| **95% Daily VaR** | $\text{Percentile}(R_{\text{daily}}, 5\%)$ | Worst expected loss at a 95% confidence level over a 1-day horizon. |
+| **95% CVaR (Expected Shortfall)** | $E[R \mid R \le \text{VaR}_{95}]$ | Average expected loss given that the 95% VaR threshold is breached. |
+
+---
+
+## 🗄️ Relational Database Architecture (Star Schema)
+
+The analytical data warehouse is structured in **SQLite3** with fully normalized dimension and fact tables:
+
+```text
+               ┌───────────────┐
+               │   dim_date    │
+               └───────┬───────┘
+                       │
+ ┌──────────────┐      │      ┌─────────────────────────┐
+ │   dim_fund   ├──────┼──────┤        fact_nav         │
+ └──────┬───────┘      │      │ (64,320 Daily Records)  │
+        │              │      └─────────────────────────┘
+        │              │
+        │              ├──────► fact_transactions (32,778 logs)
+        │              ├──────► fact_portfolio_holdings (322 rows)
+        │              ├──────► fact_performance (40 schemes)
+        │              ├──────► fact_aum (90 quarterly records)
+        │              ├──────► fact_sip_inflows (48 monthly logs)
+        │              ├──────► fact_category_inflows (144 records)
+        │              ├──────► fact_industry_folios (21 data points)
+        └──────────────┴──────► fact_benchmark (8,050 daily records)
+```
 
 ---
 
@@ -31,117 +111,96 @@ Mutual-Funds-Analytics/
 ├── data/
 │   ├── raw/                           # 10 official raw CSVs + Live API NAV CSVs
 │   ├── processed/                     # 10 cleaned & normalized CSV datasets
-│   └── db/                            # SQLite database directory (ignored by git)
+│   └── db/                            # SQLite database directory (git-ignored)
 ├── notebooks/
-│   ├── 01_data_ingestion.ipynb        # Data ingestion & live API fetch pipeline
-│   ├── 02_data_cleaning.ipynb         # Data cleaning, validation & normalization
-│   ├── 03_eda_analysis.ipynb          # Exploratory Data Analysis (15+ charts & insights)
-│   ├── 04_performance_analytics.ipynb # Performance metrics, CAGR & composite scorecards
-│   └── 05_advanced_analytics.ipynb    # VaR/CVaR, Monte Carlo (1,000 paths) & Markowitz
+│   ├── 01_data_ingestion.ipynb        # API ingestion & data acquisition pipeline
+│   ├── 02_data_cleaning.ipynb         # Cleaning, weekend imputation & normalization
+│   ├── 03_eda_analysis.ipynb          # Exploratory Data Analysis & visual insights
+│   ├── 04_performance_analytics.ipynb # Quantitative risk ratios & composite scoring
+│   └── 05_advanced_analytics.ipynb    # VaR/CVaR, Monte Carlo & Markowitz models
 ├── scripts/
-│   ├── etl_pipeline.py                # Master ETL pipeline & database loader
+│   ├── etl_pipeline.py                # Master automated ETL pipeline
 │   ├── compute_metrics.py             # Performance & risk calculation engine
 │   ├── recommender.py                 # Rule-based fund recommendation algorithm
 │   ├── live_nav_fetch.py              # Live AMFI API data ingestion (mfapi.in)
-│   ├── cron_nav_fetch.py              # Weekday 8 PM automated NAV cron worker
-│   ├── email_report.py                # Weekly HTML email summary generator & SMTP sender
+│   ├── cron_nav_fetch.py              # Weekday 8 PM automated NAV cron scheduler
+│   ├── email_report.py                # Weekly HTML email brief generator & sender
 │   ├── generate_eda.py                # 15+ EDA chart figures & notebook generator
 │   ├── generate_advanced.py           # Downside risk, cohort & sector HHI engine
 │   ├── generate_powerbi_dashboard.py  # Power BI dashboard renderer & PDF exporter
 │   ├── generate_presentation.py       # 12-slide PowerPoint presentation generator
-│   └── generate_final_pdf.py          # 15-page comprehensive capstone PDF report generator
+│   └── generate_final_pdf.py          # 15-page comprehensive capstone PDF generator
 ├── sql/
-│   ├── schema.sql                     # Full Star Schema DDL with PKs, FKs & indexes
+│   ├── schema.sql                     # Complete Star Schema DDL with PK/FK constraints
 │   └── queries.sql                    # 10 verified analytical SQL queries
 ├── dashboard/
 │   ├── bluestock_mf_dashboard.pbix    # Power BI Desktop interactive dashboard
 │   ├── app.py                         # Streamlit interactive web dashboard
-│   ├── dax_measures.dax               # Power BI DAX measures reference
+│   ├── dax_measures.dax               # Power BI DAX measures repository
 │   └── requirements_dashboard.txt     # Dashboard specific dependencies
 ├── reports/
-│   ├── Final_Report.pdf               # 15-page comprehensive capstone project report
+│   ├── Final_Report.pdf               # 15-page corporate research report
 │   ├── Bluestock_MF_Presentation.pptx # 12-slide executive presentation deck
 │   ├── Dashboard.pdf                  # 4-page compiled dashboard visual report
-│   ├── weekly_email_summary.html      # Weekly email brief template
-│   ├── figures/                       # 15+ publication-quality PNG charts & dashboard pages
+│   ├── weekly_email_summary.html      # Automated weekly HTML executive summary
+│   ├── figures/                       # 21 publication-quality charts & dashboard pages
 │   └── tables/                        # Scorecards, Alpha/Beta & VaR/CVaR CSV exports
-├── .gitignore                         # Excludes .db binaries, bytecode & caches
-├── POWERBI_SETUP.md                   # Power BI import & DAX setup guide
-├── data_dictionary.md                 # Schema & data field technical dictionary
-├── requirements.txt                   # Project dependency configuration
-├── README.md                          # Main project documentation
-└── run_pipeline.py                    # Master single-command pipeline execution script
+├── .gitignore                         # Excludes binaries, caches, and bytecode
+├── POWERBI_SETUP.md                   # Power BI data import & DAX configuration guide
+├── data_dictionary.md                 # Technical data dictionary & schema definitions
+├── requirements.txt                   # Universal production dependencies
+├── README.md                          # Platform documentation
+└── run_pipeline.py                    # Master single-command pipeline orchestrator
 ```
 
 ---
 
-## ⚡ Quick Start & Setup Instructions
+## ⚡ Quick Start & Execution
 
-### 1. Environment Installation
+### 1. Installation
 ```bash
 git clone https://github.com/Kritvi0208/Mutual-Funds-Analytics.git
-cd "Mutual-Funds-Analytics"
+cd Mutual-Funds-Analytics
 pip install -r requirements.txt
 ```
 
-### 2. Run Master Execution Pipeline
-To run the complete data pipeline end-to-end (ingestion, cleaning, database population, financial metric computation, figure generation, and report compilation):
+### 2. Run End-to-End Pipeline (1-Click Execution)
+Executes data ingestion, database loading, metric computation, figure generation, and report generation in sequence:
 ```bash
 python run_pipeline.py
 ```
 
-### 3. Launch Interactive Streamlit Dashboard
+### 3. Launch Streamlit Web Application
 ```bash
 streamlit run dashboard/app.py
 ```
-Open **[http://localhost:8501](http://localhost:8501)** in your browser.
+Open **[http://localhost:8501](http://localhost:8501)** to access the live dashboard.
 
----
-
-## 🧮 Standalone Fund Recommender CLI (`scripts/recommender.py`)
-
-You can run the fund recommender algorithm directly from the command line:
-
+### 4. Run Standalone Fund Recommender CLI
 ```bash
-# Get Top 3 recommendations for Moderate risk profile
+# Get Top 3 fund recommendations for Moderate risk profile
 python scripts/recommender.py Moderate 3
 
-# Get Top 5 recommendations for High risk profile
+# Get Top 5 fund recommendations for High risk profile
 python scripts/recommender.py High 5
-
-# Get Top 3 recommendations for Low risk profile
-python scripts/recommender.py Low 3
-```
-
-Or import as a module in Python:
-```python
-from scripts.recommender import recommend_funds
-
-# Generate recommendations based on investor risk appetite
-recommended_df = recommend_funds(risk_appetite="Moderate", top_n=3)
-print(recommended_df[["fund_rank", "scheme_name", "cagr_3yr_pct", "sharpe_ratio", "scorecard_score"]])
 ```
 
 ---
 
-## 📊 Summary of Core Deliverables
+## 📋 Capstone Deliverables & Evaluation Matrix
 
-| Deliverable ID | Deliverable Name | File Location | Key Metrics / Scope |
+| Deliverable ID | Requirement | Implementation | Artifact Location |
 |---|---|---|---|
-| **D1** | Master ETL Pipeline | [`scripts/etl_pipeline.py`](scripts/etl_pipeline.py) | Ingests 10 raw datasets, forward-fills weekend NAVs, normalizes transactions |
-| **D2** | SQLite Database & SQL | [`sql/schema.sql`](sql/schema.sql), [`sql/queries.sql`](sql/queries.sql) | 105,745 rows in Star Schema DB + 10 executed analytical queries |
-| **D3** | Exploratory Data Analysis | [`notebooks/03_eda_analysis.ipynb`](notebooks/03_eda_analysis.ipynb) | 15+ publication-quality charts in `reports/figures/` + 10 documented insights |
-| **D4** | Fund Performance Analytics | [`scripts/compute_metrics.py`](scripts/compute_metrics.py) | 1Yr/3Yr CAGRs, Sharpe ($R_f=6.5\%$), Sortino, Alpha, Beta, Max Drawdown & 0–100 Scorecard |
-| **D5** | Interactive Dashboards | [`dashboard/bluestock_mf_dashboard.pbix`](dashboard/bluestock_mf_dashboard.pbix), [`dashboard/app.py`](dashboard/app.py) | 4-page Power BI dashboard + 5-view Streamlit web app in Light Pastel theme |
-| **D6** | Advanced Risk Analytics | [`notebooks/05_advanced_analytics.ipynb`](notebooks/05_advanced_analytics.ipynb) | 95% Historical VaR (-1.82%), CVaR (-2.45%), Cohorts (2024/2025), SIP Gap Continuity |
-| **D7** | Capstone Report & Deck | [`reports/Final_Report.pdf`](reports/Final_Report.pdf), [`reports/Bluestock_MF_Presentation.pptx`](reports/Bluestock_MF_Presentation.pptx) | 15-page comprehensive final PDF report + 12-slide PowerPoint presentation |
-| **B1–B5** | Bonus Challenges | `scripts/cron_nav_fetch.py`, `scripts/email_report.py` | 8 PM NAV fetcher, Streamlit app, Monte Carlo (1,000 paths), Markowitz & HTML email briefs |
+| **D1: ETL Pipeline** | Automated cleaning & schema validation | Weekend/holiday forward-filling, numeric constraints, API fetch | [`scripts/etl_pipeline.py`](scripts/etl_pipeline.py) |
+| **D2: SQL Database** | Relational Star Schema (PK/FK/Indexes) | 10 tables, 105,745 rows, 10 analytical queries | [`sql/schema.sql`](sql/schema.sql), [`sql/queries.sql`](sql/queries.sql) |
+| **D3: EDA Visuals** | 15+ publication-quality charts & insights | AUM trends, SIP dynamics, correlations, sector allocations | [`notebooks/03_eda_analysis.ipynb`](notebooks/03_eda_analysis.ipynb) |
+| **D4: Performance** | CAGR, Sharpe, Sortino, Alpha, Beta, Scorecard | Strict 4.40-year limit handling (5-Yr = NaN), 0–100 scorecard | [`scripts/compute_metrics.py`](scripts/compute_metrics.py) |
+| **D5: Dashboards** | Power BI `.pbix` + Interactive Web App | 4-page Power BI dashboard, DAX measures, 5-view Streamlit app | [`dashboard/app.py`](dashboard/app.py), [`.pbix`](dashboard/bluestock_mf_dashboard.pbix) |
+| **D6: Risk Models** | 95% Historical VaR/CVaR, Cohorts, HHI | Tail-risk quantification, 97.8% SIP attrition discovery | [`notebooks/05_advanced_analytics.ipynb`](notebooks/05_advanced_analytics.ipynb) |
+| **D7: Reports & PPT**| 15-page research PDF + 12-slide deck | Complete corporate PDF documentation + executive slide deck | [`reports/Final_Report.pdf`](reports/Final_Report.pdf), [`.pptx`](reports/Bluestock_MF_Presentation.pptx) |
+| **B1–B5: Bonuses**   | Automated cron, Monte Carlo, Markowitz | 8 PM NAV worker, 1000-path simulation, automated HTML email | [`scripts/cron_nav_fetch.py`](scripts/cron_nav_fetch.py), [`scripts/email_report.py`](scripts/email_report.py) |
 
 ---
 
-## 📈 Key Analytical Insights
-
-1. **Industry Growth**: Total Industry AUM peaked at **₹81.4 Lakh Crores** with monthly SIP inflows reaching an all-time high of **₹31,002 Crores** (Dec 2025). Total industry folios doubled from **13.26 Cr to 26.12 Cr**.
-2. **Risk-Adjusted Alpha**: Top-performing large-cap and small-cap equity schemes generated annualized Alphas of **+26% to +29%** relative to the Nifty 100 benchmark.
-3. **Downside Risk Benchmarks**: The average 95% Historical Daily VaR across the 40 analyzed schemes was **-1.82%**, with a Conditional VaR (CVaR) tail loss expectation of **-2.45%**.
-4. **SIP Continuity & Attrition**: Analysis of 1,362 repeat investors (6+ SIP transactions) revealed that **97.8% experienced gap intervals >35 days**, underscoring the necessity of automated SIP payment continuity nudges.
+## 📄 License
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
